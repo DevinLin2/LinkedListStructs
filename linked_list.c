@@ -36,11 +36,35 @@ Should take a pointer to a list as a parameter and then go through the entire li
 and return a pointer to the beginning of the list (which should be NULL by then).
 */
 struct node * free_list(struct node * n) {
-  struct node * placeholder = a;
+  struct node * placeholder = n;
   free(n);
-  while (n -> next != NULL) {
-     printf("freeing node: %d\n", n -> number);
-     n = n -> next;
+  while (placeholder -> next != NULL) {
+    printf("freeing node: %d\n", placeholder -> number);
+    free(placeholder);
+    placeholder = placeholder -> next;
   }
-  return placeholder;
+  return n;
+}
+
+/*
+Remove the node containing data from the list pointed to by front.
+If data is not in the list, nothing is changed.
+Returns a pointer to the beginning of the list.
+*/
+struct node * remove_node(struct node * front, int data) {
+  if (front -> number == data) {
+    struct node * newFront = front -> next;
+    free(front);
+    return newFront;
+  }
+  struct node * f = front
+  while (front -> next != NULL) {
+    if (front -> next -> number == data) {
+      struct node * newNext = front -> next -> next;
+      free(front -> next);
+      front -> next = newNext;
+    }
+    front = front -> next;
+  }
+  return f;
 }

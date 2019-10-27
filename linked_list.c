@@ -6,16 +6,16 @@
 Should take a pointer to a node struct and print out all of the data in the list
 */
 void print_list(struct node * n) {
-  printf("[ %d, ", n.number);
-  while (n -> next != NULL) {
-    n = n -> next;
+  printf("[ ");
+  while (n != NULL) {
     if (n -> next == NULL) {
       printf("%d ", n -> number);
     } else {
       printf("%d, ", n -> number);
     }
+    n = n -> next;
   }
-  printf("]");
+  printf("]\n");
 }
 
 /*
@@ -37,11 +37,11 @@ and return a pointer to the beginning of the list (which should be NULL by then)
 */
 struct node * free_list(struct node * n) {
   struct node * placeholder = n;
-  free(n);
-  while (placeholder -> next != NULL) {
-    printf("freeing node: %d\n", placeholder -> number);
-    free(placeholder);
+  while (n != NULL) {
+    //printf("freeing node: %d\n", placeholder -> number);
     placeholder = placeholder -> next;
+    free(n);
+    n = placeholder;
   }
   return n;
 }
@@ -51,20 +51,16 @@ Remove the node containing data from the list pointed to by front.
 If data is not in the list, nothing is changed.
 Returns a pointer to the beginning of the list.
 */
-struct node * remove_node(struct node * front, int data) {
+struct node * remove_node(struct node *front, int data) {
+  if (front == NULL) {
+    return front;
+  }
+  // cases where the number is at the front
   if (front -> number == data) {
-    struct node * newFront = front -> next;
+    struct node * temp = front -> next;
     free(front);
-    return newFront;
+    return temp;
   }
-  struct node * f = front
-  while (front -> next != NULL) {
-    if (front -> next -> number == data) {
-      struct node * newNext = front -> next -> next;
-      free(front -> next);
-      front -> next = newNext;
-    }
-    front = front -> next;
-  }
-  return f;
+  front -> next = remove_node(front -> next, data);
+  return front;
 }
